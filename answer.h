@@ -30,7 +30,7 @@
 #define ANSWER_H
 
 #include <QKeyEvent>
-#include <QSound>
+#include <QMediaPlayer>
 #include <QFile>
 #include <QDir>
 #include <QPixmap>

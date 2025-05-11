@@ -1,10 +1,11 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-11-20T15:01:54
 # -------------------------------------------------
-QT += xml \
-    xmlpatterns \
-    phonon
-CONFIG += qtestlib
+QT += core gui widgets xml \
+    xmlpatterns
+QT += phonon4qt5
+QT += multimedia
+# QT += qtestlib
 TARGET = jeopardy
 TEMPLATE = app
 SOURCES += main.cpp \
