@@ -9,15 +9,15 @@
 #ifndef UI_ANSWER_H
 #define UI_ANSWER_H
 
-#include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QVariant>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QDialog>
+#include <QGraphicsView>
+#include <QHeaderView>
+#include <QLabel>
+#include <QPushButton>
 #include <phonon/videoplayer.h>
 
 QT_BEGIN_NAMESPACE
@@ -137,13 +137,13 @@ public:
 
     void retranslateUi(QDialog *Answer)
     {
-        Answer->setWindowTitle(QApplication::translate("Answer", "Jeopardy", 0, QApplication::UnicodeUTF8));
-        buttonRight->setText(QApplication::translate("Answer", "Right", 0, QApplication::UnicodeUTF8));
-        buttonEnd->setText(QApplication::translate("Answer", "End", 0, QApplication::UnicodeUTF8));
-        buttonWrong->setText(QApplication::translate("Answer", "Wrong", 0, QApplication::UnicodeUTF8));
-        answer->setText(QApplication::translate("Answer", "listen...", 0, QApplication::UnicodeUTF8));
-        currentPlayer->setText(QApplication::translate("Answer", "currentPlayer", 0, QApplication::UnicodeUTF8));
-        buttonCancel->setText(QApplication::translate("Answer", "Cancel", 0, QApplication::UnicodeUTF8));
+        Answer->setWindowTitle(QApplication::translate("Answer", "Jeopardy"));
+        buttonRight->setText(QApplication::translate("Answer", "Right"));
+        buttonEnd->setText(QApplication::translate("Answer", "End"));
+        buttonWrong->setText(QApplication::translate("Answer", "Wrong"));
+        answer->setText(QApplication::translate("Answer", "listen..."));
+        currentPlayer->setText(QApplication::translate("Answer", "currentPlayer"));
+        buttonCancel->setText(QApplication::translate("Answer", "Cancel"));
         time->setText(QString());
     } // retranslateUi
 
