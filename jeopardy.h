@@ -31,12 +31,11 @@
 
 #include <QMainWindow>
 #include <QInputDialog>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QKeyEvent>
 #include <QWidget>
-#include <phonon/mediaobject.h>
-#include <gamefield.h>
-#include <player.h>
+#include "gamefield.h"
+#include "player.h"
 
 #define NUMBER_ROUNDS 4
 #define NUMBER_MAX_PLAYERS 9

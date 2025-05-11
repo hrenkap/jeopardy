@@ -18,7 +18,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
-#include <phonon/videoplayer.h>
+//#include <phonon/videoplayer.h>
 
 QT_BEGIN_NAMESPACE
 

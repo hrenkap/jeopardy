@@ -27,7 +27,7 @@
  */
 
 #include "jeopardy.h"
-#include "ui_jeopardy.h"
+//#include "ui_jeopardy.h"
 
 Jeopardy::Jeopardy(QWidget *parent) :
     QMainWindow(parent),

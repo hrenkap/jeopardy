@@ -37,8 +37,7 @@
 #include <QTimer>
 #include <QTime>
 #include <QGraphicsScene>
-#include <phonon/mediaobject.h>
-#include <doublejeopardy.h>
+#include "doublejeopardy.h"
 
 #define NUMBER_MAX_PLAYERS 9
 #define NUMBER_MAX_CATEGORIES 6
@@ -54,7 +53,11 @@ namespace Ui {
     class Answer;
 }
 
-class Answer : public QDialog {
+class QMediaPlayer;
+class QAudioOutput;
+class QVideoWidget;
+
+    class Answer : public QDialog {
     Q_OBJECT
 public:
     Answer(QWidget *parent = NULL, QString file = NULL, int round = 0, Player *players = NULL, int playerNr = 0, bool sound = true, int currentPlayerId = 0);
@@ -85,7 +88,14 @@ private:
     QTimer *timer;
     Player *players;
     Player currentPlayer;
-    Phonon::MediaObject *music;
+    //Phonon::MediaObject *music;
+
+    QMediaPlayer* musicPlayer;
+    QAudioOutput* audioOutput;
+
+    QMediaPlayer* videoPlayer;
+    QVideoWidget *videoWidget;
+
     DoubleJeopardy *dj;
 
     void keyPressEvent(QKeyEvent *event);

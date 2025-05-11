@@ -26,6 +26,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
 #include "answer.h"
 #include "ui_answer.h"
 
@@ -45,6 +48,10 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
         QDialog(parent), ui(new Ui::Answer), round(round), playerNr(playerNr),points(0), currentPlayerId(currentPlayerId),
         winner(NO_WINNER), keyLock(false), sound(sound), doubleJeopardy(false), result(), fileString(file), players(players), currentPlayer(), dj(NULL)
 {
+    this->musicPlayer = new QMediaPlayer(this);
+    this->audioOutput = new QAudioOutput(this);
+    musicPlayer->setAudioOutput(audioOutput);
+
     ui->setupUi(this);
 
     this->time = new QTime();
@@ -58,8 +65,11 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
     ui->graphicsView->setVisible(false);
     ui->videoPlayer->setVisible(false);
 
-    if(sound)
-        this->music = Phonon::createPlayer(Phonon::NoCategory, Phonon::MediaSource("sound/jeopardy.wav"));
+    if(sound) {
+        musicPlayer->setSource(QUrl::fromLocalFile("sound/jeopardy.wav"));
+        audioOutput->setVolume(100);
+        musicPlayer->play();
+    }
 
     this->isVideo = false;
 }
@@ -112,15 +122,20 @@ void Answer::setAnswer(int category, int points)
         done(0);
     }
 
-    QRegExp comment("##.+##");
-    QRegExp imgTag("^[[]img[]]");
-    QRegExp videoTag("^[[]video[]]");
-    QRegExp soundTag("^[[]sound[]]");
-    QRegExp alignLeftTag("[[]l[]]");
-    QRegExp doubleJeopardyTag("[[]dj[]]");
-    QRegExp lineBreakTag("[[]b[]]");
-    QRegExp noEscape("[[]nE[]]");
-    QRegExp space("[[]s[]]");
+    // Comments: e.g., ## some text ##
+    QRegularExpression comment(R"(##.+##)");
+
+    // Tags at the beginning of lines:
+    QRegularExpression imgTag(R"(^\[img\])");
+    QRegularExpression videoTag(R"(^\[video\])");
+    QRegularExpression soundTag(R"(^\[sound\])");
+
+    // Alignment or formatting tags (anywhere in line):
+    QRegularExpression alignLeftTag(R"(\[l\])");
+    QRegularExpression doubleJeopardyTag(R"(\[dj\])");
+    QRegularExpression lineBreakTag(R"(\[b\])");
+    QRegularExpression noEscape(R"(\[nE\])");
+    QRegularExpression space(R"(\[s\])");
 
     answer.remove(comment);
     answer.replace(lineBreakTag,"<br>");
@@ -170,14 +185,14 @@ void Answer::setAnswer(int category, int points)
 
 void Answer::processAlign(QString *answer)
 {
-    QRegExp alignLeftTag("[[]l[]]");
+    QRegularExpression alignLeftTag(R"(\[l\])");
     answer->remove(alignLeftTag);
     ui->answer->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 void Answer::processDoubleJeopardy(QString *answer)
 {
-    QRegExp doubleJeopardyTag("[[]dj[]]");
+    QRegularExpression doubleJeopardyTag(R"(\[dj\])");
     answer->remove(doubleJeopardyTag);
     this->openDoubleJeopardy();
 }
