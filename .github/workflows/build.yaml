@@ -17,7 +17,7 @@ jobs:
     - name: Install Qt5 and build tools
       run: |
         sudo apt update
-        sudo apt install -y qt5-qmake qtbase5-dev qtbase5-dev-tools qtmultimedia5-dev libqt5xmlpatterns5-dev qtxmlpatterns5-dev-tools libphonon4qt5-dev build-essential
+        sudo apt install -y qt5-qmake qtbase5-dev qtbase5-dev-tools qtmultimedia5-dev libqt5xmlpatterns5-dev qtxmlpatterns5-dev-tools libphonon4qt5-dev build-essential wget patchelf
 
     - name: Configure project
       run: |
@@ -26,6 +26,30 @@ jobs:
     - name: Build project
       run: |
         make
+
+    - name: Download linuxdeploy and Qt plugin
+      run: |
+        mkdir appimage-tools
+        cd appimage-tools
+        wget -c https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+        wget -c https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+        chmod +x linuxdeploy*.AppImage
+
+    - name: Bundle into AppImage with Qt
+      run: |
+        ./appimage-tools/linuxdeploy-x86_64.AppImage \
+          --appdir AppDir \
+          --executable ./jeopardy \
+          --desktop-file jeopardy.desktop \
+          --icon-file jeopardy.png \
+          --plugin qt \
+          -o appimage
+
+    - name: Upload AppImage
+      uses: actions/upload-artifact@v4
+      with:
+        name: Jeopardy-AppImage
+        path: ./*.AppImage
 
     - name: Upload binary
       uses: actions/upload-artifact@v4
