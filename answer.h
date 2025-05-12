@@ -35,7 +35,7 @@
 #include <QDir>
 #include <QPixmap>
 #include <QTimer>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QGraphicsScene>
 #include "doublejeopardy.h"
 
@@ -84,17 +84,16 @@ private:
     bool doubleJeopardy;
     QString result;
     QString fileString;
-    QTime *time;
+    QElapsedTimer *time;
     QTimer *timer;
     Player *players;
     Player currentPlayer;
-    //Phonon::MediaObject *music;
 
     QMediaPlayer* musicPlayer;
     QAudioOutput* audioOutput;
 
     QMediaPlayer* videoPlayer;
-    QVideoWidget *videoWidget;
+    QVideoWidget* videoWidget;
 
     DoubleJeopardy *dj;
 

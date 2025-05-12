@@ -28,6 +28,8 @@
 
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QVideoWidget>
+#include <QElapsedTimer>
 
 #include "answer.h"
 #include "ui_answer.h"
@@ -54,7 +56,13 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
 
     ui->setupUi(this);
 
-    this->time = new QTime();
+    QVideoWidget* videoWidget = findChild<QVideoWidget*>("videoPlayer");
+    assert(videoWidget != nullptr);
+    this->videoWidget = videoWidget;
+    this->videoPlayer = new QMediaPlayer(this);
+    videoPlayer->setVideoOutput(videoWidget);
+
+    this->time = new QElapsedTimer();
     this->time->start();
     timer = new QTimer();
     timer->setInterval(1*1000);
@@ -63,7 +71,8 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
 
     this->hideButtons();
     ui->graphicsView->setVisible(false);
-    ui->videoPlayer->setVisible(false);
+    videoWidget->setVisible(false);
+
 
     if(sound) {
         musicPlayer->setSource(QUrl::fromLocalFile("sound/jeopardy.wav"));
@@ -77,8 +86,10 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
 Answer::~Answer()
 {
     delete ui;
-    if(this->sound)
-        delete this->music;
+    if(this->sound) {
+        delete this->musicPlayer;
+        delete this->audioOutput;
+    }
 
     if(this->dj != NULL)
         delete this->dj;
@@ -156,7 +167,7 @@ void Answer::setAnswer(int category, int points)
     if(answer.contains(imgTag))
     {
         if(this->sound)
-            this->music->play();
+            this->musicPlayer->play();
 
         answer.remove(imgTag);
         answer = answer.trimmed();
@@ -177,7 +188,7 @@ void Answer::setAnswer(int category, int points)
     else
     {
         if(this->sound)
-            this->music->play();
+            this->musicPlayer->play();
 
         this->processText(&answer);
     }
@@ -222,9 +233,15 @@ void Answer::processSound(QString *answer)
     this->prependDir(answer);
 
     this->sound = true;
-    this->music = Phonon::createPlayer(Phonon::NoCategory, Phonon::MediaSource(*answer));
-    this->music->play();
-    QTimer::singleShot(30000, this->music, SLOT(stop()));
+
+    this->musicPlayer = new QMediaPlayer(this);
+    this->audioOutput = new QAudioOutput(this);
+    this->musicPlayer->setAudioOutput(this->audioOutput);
+    this->musicPlayer->setSource(QUrl::fromLocalFile(*answer));
+    this->audioOutput->setVolume(100);
+    this->musicPlayer->play();
+
+    QTimer::singleShot(30000, this->musicPlayer, SLOT(stop()));
 }
 
 void Answer::processVideo(QString *answer)
@@ -232,8 +249,13 @@ void Answer::processVideo(QString *answer)
     this->isVideo = true;
     this->prependDir(answer);
 
-    ui->videoPlayer->setVisible(true);
-    ui->videoPlayer->play(*answer);
+    this->videoWidget->setVisible(true);
+
+    this->videoPlayer->setVideoOutput(videoWidget);
+    this->videoPlayer->setSource(QUrl::fromLocalFile(*answer));
+    this->videoPlayer->play();
+
+
     QTimer::singleShot(30000, ui->videoPlayer, SLOT(stop()));
 }
 
@@ -259,16 +281,16 @@ void Answer::keyPressEvent(QKeyEvent *event)
     {
         if(this->isVideo == true)
         {
-            ui->videoPlayer->stop();
-            ui->videoPlayer->seek(0);
+            this->videoPlayer->stop();
+            this->videoPlayer->setPosition(0);
             QTimer::singleShot(100, ui->videoPlayer, SLOT(play()));
             QTimer::singleShot(30000, ui->videoPlayer, SLOT(stop()));
         }
         else
         {
-            this->music->stop();
-            QTimer::singleShot(100, this->music, SLOT(play()));
-            QTimer::singleShot(30000, this->music, SLOT(stop()));
+            this->musicPlayer->stop();
+            QTimer::singleShot(100, this->musicPlayer, SLOT(play()));
+            QTimer::singleShot(30000, this->musicPlayer, SLOT(stop()));
         }
 
         this->time->start();
@@ -296,7 +318,7 @@ void Answer::keyPressEvent(QKeyEvent *event)
 
 void Answer::processKeypress(int player)
 {
-    if(this->time->elapsed() < this->time->msec() + 31000)
+    if(this->time->elapsed() < 31000)
     {
         this->currentPlayer = this->players[player];
         ui->currentPlayer->setText(this->currentPlayer.getName());
@@ -432,7 +454,7 @@ void Answer::on_buttonEnd_clicked()
     if(ret == QMessageBox::Yes)
     {
         if(this->sound)
-            this->music->stop();
+            this->musicPlayer->stop();
         this->winner = NO_WINNER;
         done(0);
     }
@@ -446,7 +468,7 @@ void Answer::on_buttonRight_clicked()
     this->result.append(resultTmp);
     this->releaseKeyListener();
     if(this->sound)
-        this->music->stop();
+        this->musicPlayer->stop();
     this->winner = this->currentPlayer.getId() - OFFSET;
     done(0);
 }
@@ -462,7 +484,7 @@ void Answer::on_buttonWrong_clicked()
     if(this->doubleJeopardy)
     {
         if(this->sound)
-            this->music->stop();
+            this->musicPlayer->stop();
         this->winner = NO_WINNER;
         done(0);
     }

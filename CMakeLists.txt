@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Xml Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Xml Multimedia MultimediaWidgets)
 
 add_executable(jeopardy
     main.cpp
@@ -33,4 +33,5 @@ target_link_libraries(jeopardy
     Qt6::Widgets
     Qt6::Xml
     Qt6::Multimedia
+    Qt6::MultimediaWidgets
 )

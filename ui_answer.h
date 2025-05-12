@@ -18,7 +18,8 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
-//#include <phonon/videoplayer.h>
+#include <QMediaPlayer>
+#include <QVideoWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -32,7 +33,8 @@ public:
     QLabel *currentPlayer;
     QPushButton *buttonCancel;
     QGraphicsView *graphicsView;
-    Phonon::VideoPlayer *videoPlayer;
+    QMediaPlayer *videoPlayer;
+    QVideoWidget *videoWidget;
     QLabel *time;
 
     void setupUi(QDialog *Answer)
@@ -64,7 +66,7 @@ public:
         font.setFamily(QString::fromUtf8("Andale Mono"));
         font.setPointSize(14);
         font.setBold(false);
-        font.setWeight(50);
+        font.setWeight(QFont::Normal);
         buttonRight->setFont(font);
         buttonRight->setCursor(QCursor(Qt::WhatsThisCursor));
         buttonEnd = new QPushButton(Answer);
@@ -90,7 +92,7 @@ public:
         font1.setFamily(QString::fromUtf8("Andale Mono"));
         font1.setPointSize(28);
         font1.setBold(false);
-        font1.setWeight(50);
+        font1.setWeight(QFont::Normal);
         answer->setFont(font1);
         answer->setCursor(QCursor(Qt::WhatsThisCursor));
         answer->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
@@ -118,11 +120,11 @@ public:
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
         graphicsView->setGeometry(QRect(1, 1, 997, 531));
         graphicsView->viewport()->setProperty("cursor", QVariant(QCursor(Qt::WhatsThisCursor)));
-        videoPlayer = new Phonon::VideoPlayer(Answer);
-        videoPlayer->setObjectName(QString::fromUtf8("videoPlayer"));
-        videoPlayer->setGeometry(QRect(9, 9, 981, 511));
-        videoPlayer->setCursor(QCursor(Qt::WhatsThisCursor));
-        videoPlayer->setStyleSheet(QString::fromUtf8(""));
+        videoWidget = new QVideoWidget(Answer);
+        videoWidget->setObjectName(QString::fromUtf8("videoWidget"));
+        videoWidget->setGeometry(QRect(9, 9, 981, 511));
+        videoWidget->setCursor(QCursor(Qt::WhatsThisCursor));
+        videoWidget->setStyleSheet(QString::fromUtf8(""));
         time = new QLabel(Answer);
         time->setObjectName(QString::fromUtf8("time"));
         time->setGeometry(QRect(20, 540, 221, 16));

@@ -68,7 +68,11 @@ private:
     QGridLayout *grid;
     QPushButton *buttons[NUMBER_ROUNDS];
     Player *players;
-    Phonon::MediaObject *music;
+    //Phonon::MediaObject *music;
+
+    QMediaPlayer* musicPlayer;
+    QAudioOutput* audioOutput;
+
     GameField *gameField;
 
     void initMenu();
