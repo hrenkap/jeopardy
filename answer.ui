@@ -231,7 +231,7 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="QGraphicsView" name="graphicsView">
+    <widget class="QLabel" name="imageView">
    <property name="geometry">
     <rect>
      <x>1</x>
@@ -240,8 +240,8 @@
      <height>531</height>
     </rect>
    </property>
-   <property name="cursor" stdset="0">
-    <cursorShape>WhatsThisCursor</cursorShape>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QVideoWidget" name="videoPlayer">

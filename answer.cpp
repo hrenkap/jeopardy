@@ -30,6 +30,7 @@
 #include <QAudioOutput>
 #include <QVideoWidget>
 #include <QElapsedTimer>
+#include <QDebug>
 
 #include "answer.h"
 #include "ui_answer.h"
@@ -70,7 +71,7 @@ Answer::Answer(QWidget *parent, QString file, int round, Player *players, int pl
     timer->start();
 
     this->hideButtons();
-    ui->graphicsView->setVisible(false);
+    ui->imageView->setVisible(false);
     videoWidget->setVisible(false);
 
 
@@ -164,6 +165,8 @@ void Answer::setAnswer(int category, int points)
     if(answer.contains(doubleJeopardyTag))
         this->processDoubleJeopardy(&answer);
 
+    answer = answer.trimmed();
+
     if(answer.contains(imgTag))
     {
         if(this->sound)
@@ -212,20 +215,20 @@ void Answer::processImg(QString *answer)
 {
     this->prependDir(answer);
 
-    ui->graphicsView->setVisible(true);
+    ui->answer->setVisible(false);
+    ui->imageView->setVisible(true);
 
-    QGraphicsScene *scene = new QGraphicsScene(ui->graphicsView);
     QPixmap pic(*answer);
 
-    if(pic.height() > ui->graphicsView->height())
-        pic = pic.scaledToHeight(ui->graphicsView->height() - 10);
+    if(pic.height() > ui->imageView->height())
+        pic = pic.scaledToHeight(ui->imageView->height() - 10);
 
-    if(pic.width() > ui->graphicsView->width())
-        pic = pic.scaledToWidth(ui->graphicsView->width() - 10);
+    if(pic.width() > ui->imageView->width())
+        pic = pic.scaledToWidth(ui->imageView->width() - 10);
 
-    scene->addPixmap(pic);
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->show();
+    ui->imageView->setPixmap(pic);
+
+    ui->imageView->show();
 }
 
 void Answer::processSound(QString *answer)
