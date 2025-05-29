@@ -17,7 +17,7 @@ jobs:
     - name: Install Qt6 and build tools
       run: |
         sudo apt update
-        sudo apt install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-multimedia-dev
+        sudo apt install -y qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-multimedia-dev libgl-dev libopengl-dev mesa-common-dev
 
     - name: Configure project
       run: |
