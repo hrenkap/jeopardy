@@ -237,8 +237,7 @@ void Answer::processSound(QString *answer)
 
     this->sound = true;
 
-    this->musicPlayer = new QMediaPlayer(this);
-    this->audioOutput = new QAudioOutput(this);
+    this->musicPlayer->stop(); // stop default melody
     this->musicPlayer->setAudioOutput(this->audioOutput);
     this->musicPlayer->setSource(QUrl::fromLocalFile(*answer));
     this->audioOutput->setVolume(100);
